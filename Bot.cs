@@ -85,6 +85,7 @@ namespace Bot.Api
                             while (true)
                             {
                                 x++;
+                                
                             }
                             return;
                         }
@@ -97,7 +98,6 @@ namespace Bot.Api
                     }
 
                     // Deploy a option's list to select or write the question
-                    await turnContext.SendActivityAsync(MessageFactory.Text($"Elije una opción o escribe tu pregunta"), cancellationToken);
                     var card = new HeroCard
                     {
                         Text = "Aquí hay una variedad de opciones de las cuales puedes escoger:",
@@ -110,8 +110,6 @@ namespace Bot.Api
                         }
                     };
                     await turnContext.SendActivityAsync(MessageFactory.Attachment(card.ToAttachment()), cancellationToken);
-                    await turnContext.SendActivityAsync(MessageFactory.Text($"O escribe tu propia pregunta =), solo está implementada la intención Consultar tu saldo presupuestal"), cancellationToken);
-
                     // Verify the user authentication
 
                 }

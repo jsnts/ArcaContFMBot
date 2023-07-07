@@ -40,9 +40,8 @@ namespace Bot.Api.Dialogs
                 await dialog.Context.SendActivityAsync(ex.Message, cancellationToken: cancellationToken);
             }*/
 
-            await dialog.Context.SendActivityAsync(MessageFactory.Text($"Hola! Estoy feliz por ayudarte, escribe tu pregunta o seleccionala del menu de abajo para que comencemos ;)"), cancellationToken);
+            await dialog.Context.SendActivityAsync(MessageFactory.Text($"Hola! Estoy feliz por ayudarte, escribe tu pregunta o seleccionala del menu de abajo para que comencemos \U0001F609"), cancellationToken);
             // Deploy a option's list to select or write the question
-            await dialog.Context.SendActivityAsync(MessageFactory.Text($"Elije una opción o escribe tu pregunta"), cancellationToken);
             var card = new HeroCard
             {
                 Text = "Aquí hay una variedad de opciones de las cuales puedes escoger:",
@@ -55,7 +54,6 @@ namespace Bot.Api.Dialogs
                         }
             };
             await dialog.Context.SendActivityAsync(MessageFactory.Attachment(card.ToAttachment()), cancellationToken);
-            await dialog.Context.SendActivityAsync(MessageFactory.Text($"O escribe tu propia pregunta =), solo está implementada la intención Consultar tu saldo presupuestal"), cancellationToken);
             return await dialog.EndDialogAsync(cancellationToken: cancellationToken);
         }
 

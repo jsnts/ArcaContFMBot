@@ -245,35 +245,28 @@ namespace Bot.Api.Dialogs
 
                 var card = new AdaptiveCard(new AdaptiveSchemaVersion(1, 0));
                 var columnSet = new AdaptiveColumnSet();
-                var columnCeCo = new AdaptiveColumn() { Width = "20%" };
-                var columnCuenta = new AdaptiveColumn() { Width = "20%" };
-                var column1 = new AdaptiveColumn() { Width = "15%" };
-                var column2 = new AdaptiveColumn() { Width = "15%" };
-                var column3 = new AdaptiveColumn() { Width = "15%" };
-                var column4 = new AdaptiveColumn() { Width = "15%" };
+                var column1 = new AdaptiveColumn() { Width = "25%" };
+                var column2 = new AdaptiveColumn() { Width = "25%" };
+                var column3 = new AdaptiveColumn() { Width = "25%" };
+                var column4 = new AdaptiveColumn() { Width = "25%" };
 
-                columnCeCo.Items.Add(new AdaptiveTextBlock() { Text = "Desc CeCo" });
-                column1.Items.Add(new AdaptiveTextBlock() { Text = "CeCo" });
-                columnCuenta.Items.Add(new AdaptiveTextBlock() { Text = "Desc Cuenta" });
-                column2.Items.Add(new AdaptiveTextBlock() { Text = "Cuenta" });
+                column1.Items.Add(new AdaptiveTextBlock() { Text = "CeCo", Wrap = true });
+                column2.Items.Add(new AdaptiveTextBlock() { Text = "Cuenta" , Wrap = true });
                 column3.Items.Add(new AdaptiveTextBlock() { Text = "Sociedad" });
-                column4.Items.Add(new AdaptiveTextBlock() { Text = "Saldo" });
+                column4.Items.Add(new AdaptiveTextBlock() { Text = "Saldo (MX)" , Wrap = true });
 
                 while (reader.Read())
                 {
-                    var DescCeCo = reader["Desc_CeGe"].ToString();
                     var CeCo = reader["Centro_Gestor"].ToString();
-                    var DescCuenta = reader["Desc_PosPre"].ToString();
                     var NumCuenta = reader["Pos_Pre"].ToString();
                     var sociedad = society;
-                    var saldoPresupuestal = reader["Comp_Anual_Comprometido"].ToString();
+                    var saldoPr = Convert.ToDecimal(reader["Comp_Anual_Comprometido"]);
+                    var saldoPresupuestal = "$" + saldoPr.ToString("N2");
 
-                    columnCeCo.Items.Add(new AdaptiveTextBlock() { Text = DescCeCo });
-                    column1.Items.Add(new AdaptiveTextBlock() { Text = CeCo });
-                    columnCuenta.Items.Add(new AdaptiveTextBlock() { Text = DescCuenta });
-                    column2.Items.Add(new AdaptiveTextBlock() { Text = NumCuenta });
-                    column3.Items.Add(new AdaptiveTextBlock() { Text = sociedad });
-                    column4.Items.Add(new AdaptiveTextBlock() { Text = saldoPresupuestal });
+                    column1.Items.Add(new AdaptiveTextBlock() { Text = CeCo , Wrap = true, Height = AdaptiveHeight.Stretch });
+                    column2.Items.Add(new AdaptiveTextBlock() { Text = NumCuenta , Wrap = true, Height = AdaptiveHeight.Stretch });
+                    column3.Items.Add(new AdaptiveTextBlock() { Text = sociedad , Wrap = true, Height = AdaptiveHeight.Stretch });
+                    column4.Items.Add(new AdaptiveTextBlock() { Text = saldoPresupuestal, Wrap = true, Height = AdaptiveHeight.Stretch });
                 }
 
                 //columnSet.Columns.Add(columnCeCo);
