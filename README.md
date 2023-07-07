@@ -1,4 +1,4 @@
-# Bot.Api
+﻿# Bot.Api
 
 Bot Framework v4 empty bot sample.
 

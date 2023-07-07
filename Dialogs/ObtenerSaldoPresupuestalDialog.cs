@@ -27,20 +27,37 @@ namespace Bot.Api.Dialogs
 
         private static async Task<DialogTurnResult> TipoSaldoAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            var card = new HeroCard
+            var carousel = new List<Attachment>();
+
+            var card1 = new HeroCard
             {
-                Text = "Aquí hay una variedad de opciones de las cuales puedes escoger:",
+                Text = "Presupuesto",
                 Buttons = new List<CardAction>
                 {
                     new CardAction(ActionTypes.ImBack, title: "1) Disponible al momento", value: "Disponible al momento"),
                     new CardAction(ActionTypes.ImBack, title: "2) Anual", value: "Anual"),
                     new CardAction(ActionTypes.ImBack, title: "3) Importe disponible (liberado)", value: "Importe disponible liberado"),
+                
+                }
+            };
+
+            carousel.Add(card1.ToAttachment());
+
+            var card2 = new HeroCard
+            {
+                Text = "Gastos",
+                Buttons = new List<CardAction>
+                {
                     new CardAction(ActionTypes.ImBack, title: "4) Gastado total", value: "GastadoTotal"),
                     new CardAction(ActionTypes.ImBack, title: "5) Comprometido", value: "Comprometido"),
                     new CardAction(ActionTypes.ImBack, title: "6) Real devengado", value: "Real devengado")
                 }
             };
-            await stepContext.Context.SendActivityAsync(MessageFactory.Attachment(card.ToAttachment()), cancellationToken);
+
+            carousel.Add(card2.ToAttachment());
+
+            var message = MessageFactory.Carousel(carousel);
+            await stepContext.Context.SendActivityAsync(message, cancellationToken);
             await stepContext.Context.SendActivityAsync(MessageFactory.Text($"O escribe tu mismo el que quieras"), cancellationToken);
 
             // Wait for user input
