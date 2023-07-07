@@ -71,31 +71,59 @@ namespace Bot.Api.Dialogs
 
             try
             {
-                //Ejecutamos la conexion
+                // Ejecutamos la conexión
                 var reader = db.ExecuteReader(query);
-                var cardC = new HeroCard()
-                {
-                    Text = "Escoje de estos centros de costos disponibles para tu usuario:",
-                    Buttons = new List<CardAction>()
-                };
 
-                var cecoList = new List<string>();
+                var adaptiveCard = new AdaptiveCard(new AdaptiveSchemaVersion(1, 0));
+                var container = new AdaptiveContainer();
+
+                var cardTextBlock = new AdaptiveTextBlock
+                {
+                    Text = "Elige entre las siguientes cuentas relacionadas con tus Centros de Costo seleccionados:",
+                    Size = AdaptiveTextSize.Default,
+                    Weight = AdaptiveTextWeight.Default,
+                    Wrap = true
+                };
+                container.Items.Add(cardTextBlock);
+
+                var actions = new List<AdaptiveAction>();
+
+                var cuentaList = new List<string>();
 
                 while (reader.Read())
                 {
-                    var CeCo = reader["CeCo"].ToString();
-                    var DescCeCo = reader["DescCeCo"].ToString();
-                    var Sociedad = reader["Sociedad"].ToString();
-                    //await stepContext.Context.SendActivityAsync($"Centro de Costos: {CeCo}, Numero de cuenta: {NumCuenta}, Sociedad: {sociedad}, Saldo Presupuestal: {saldoPresupuestal}");
+                    var NumCuenta = reader["Pos_Pre"].ToString();
+                    var DescCuenta = reader["Desc_PosPre"].ToString();
+                    var Sociedad = society;
 
-                    cardC.Buttons.Add(new CardAction(ActionTypes.ImBack, title: $@"{CeCo} {DescCeCo}", value: $@"{CeCo}"));
-                    cecoList.Add(CeCo);
+                    var buttonAction = new AdaptiveSubmitAction
+                    {
+                        Title = DescCuenta,
+                        Data = NumCuenta
+                    };
+                    actions.Add(buttonAction);
+
+                    cuentaList.Add(NumCuenta);
                 }
 
-                stepContext.Values["AUX"] = cecoList;
+                stepContext.Values["AUX"] = cuentaList;
 
-                cardC.Buttons.Add(new CardAction(ActionTypes.ImBack, title: $@"Todos los Centros de Costos", value: $@"Todos"));
-                await stepContext.Context.SendActivityAsync(MessageFactory.Attachment(cardC.ToAttachment()), cancellationToken);      
+                actions.Add(new AdaptiveSubmitAction
+                {
+                    Title = "Todas las cuentas",
+                    Data = "Todas"
+                });
+
+                adaptiveCard.Body.Add(container);
+                adaptiveCard.Actions.AddRange(actions.Select(a => a));
+
+                var attachment = new Attachment
+                {
+                    ContentType = AdaptiveCard.ContentType,
+                    Content = adaptiveCard
+                };
+
+                await stepContext.Context.SendActivityAsync(MessageFactory.Attachment(attachment), cancellationToken);
 
                 reader.Close();
             }
