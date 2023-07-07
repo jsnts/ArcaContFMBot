@@ -40,7 +40,7 @@ namespace Bot.Api.Dialogs
                 await dialog.Context.SendActivityAsync(ex.Message, cancellationToken: cancellationToken);
             }*/
 
-            await dialog.Context.SendActivityAsync(MessageFactory.Text($"Hola! Estoy feliz por ayudarte, escribe tu pregunta o seleccionala del menu de abajo para que comencemos \U0001F609"), cancellationToken);
+            await dialog.Context.SendActivityAsync(MessageFactory.Text($"¡Hola! Estoy feliz de ayudarte, escribe tu pregunta o selecciona la opción que prefieras del siguiente menú para comenzar \U0000263A: "), cancellationToken);
             // Deploy a option's list to select or write the question
             var card = new HeroCard
             {
