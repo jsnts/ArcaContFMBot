@@ -99,7 +99,7 @@ namespace Bot.Api.Dialogs
             }
             catch (Exception ex)
             {
-                await stepContext.Context.SendActivityAsync("The bot encountered an error or bug.", cancellationToken: cancellationToken);
+                await stepContext.Context.SendActivityAsync("The bot encountered an error/bug.", cancellationToken: cancellationToken);
                 await stepContext.Context.SendActivityAsync("To continue to run this bot, please fix the bot source code.", cancellationToken: cancellationToken);
                 await stepContext.Context.SendActivityAsync(ex.Message, cancellationToken: cancellationToken);
             }
