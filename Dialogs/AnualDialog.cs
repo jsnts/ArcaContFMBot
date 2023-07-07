@@ -153,22 +153,14 @@ namespace Bot.Api.Dialogs
 
             try
             {
-                // Ejecutamos la conexión
+                //Ejecutamos la conexion
                 var reader = db.ExecuteReader(query);
 
-                var adaptiveCard = new AdaptiveCard(new AdaptiveSchemaVersion(1, 0));
-                var container = new AdaptiveContainer();
-
-                var cardTextBlock = new AdaptiveTextBlock
+                var cardC = new HeroCard()
                 {
-                    Text = "Elige entre las siguientes cuentas relacionadas con tus Centros de Costo seleccionados:",
-                    Size = AdaptiveTextSize.Default,
-                    Weight = AdaptiveTextWeight.Default,
-                    Wrap = true
+                    Text = "Escoje de estas cuentas relacionadas a tu o tus Centros de Costo previamente elegidos:",
+                    Buttons = new List<CardAction>()
                 };
-                container.Items.Add(cardTextBlock);
-
-                var actions = new List<AdaptiveAction>();
 
                 var cuentaList = new List<string>();
 
@@ -178,34 +170,14 @@ namespace Bot.Api.Dialogs
                     var DescCuenta = reader["Desc_PosPre"].ToString();
                     var Sociedad = society;
 
-                    var buttonAction = new AdaptiveSubmitAction
-                    {
-                        Title = DescCuenta,
-                        Data = NumCuenta
-                    };
-                    actions.Add(buttonAction);
+                    cardC.Buttons.Add(new CardAction(ActionTypes.ImBack, title: $@"{DescCuenta}", value: $@"{NumCuenta}"));
 
                     cuentaList.Add(NumCuenta);
                 }
-
                 stepContext.Values["AUX"] = cuentaList;
 
-                actions.Add(new AdaptiveSubmitAction
-                {
-                    Title = "Todas las cuentas",
-                    Data = "Todas"
-                });
-
-                adaptiveCard.Body.Add(container);
-                adaptiveCard.Actions.AddRange(actions.Select(a => a));
-
-                var attachment = new Attachment
-                {
-                    ContentType = AdaptiveCard.ContentType,
-                    Content = adaptiveCard
-                };
-
-                await stepContext.Context.SendActivityAsync(MessageFactory.Attachment(attachment), cancellationToken);
+                cardC.Buttons.Add(new CardAction(ActionTypes.ImBack, title: $@"Todas las cuentas", value: $@"Todas"));
+                await stepContext.Context.SendActivityAsync(MessageFactory.Attachment(cardC.ToAttachment()), cancellationToken);
 
                 reader.Close();
             }
